@@ -32,10 +32,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // --- Маска для телефона ---
   const phoneInputField = document.querySelector("[name=phone]");
-  const phoneMask = new IMask(phoneInputField, {
-    mask: "+{7} (000) 000-00-00"
-  });
-
+  if (phoneInputField) {
+    const phoneMask = new IMask(phoneInputField, {
+      mask: "+{7} (000) 000-00-00"
+    });
+  } else {
+    console.error("Элемент с name='phone' не найден!");
+  }
+  
   // --- EmailJS отправка формы ---
   emailjs.init("YOUR_USER_ID");
 
