@@ -2,28 +2,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const modal = document.getElementById("bookingModal");
   const closeBtn = document.querySelector(".close");
 
-  console.log("DOM загружен");
-
-  const phoneInputField = document.querySelector("[name=phone]");
-
-  if (phoneInputField) {
-    console.log("Поле телефона найдено:", phoneInputField);
-
-    const phoneMask = new IMask(phoneInputField, {
-      mask: "+{7} (000) 000-00-00"
-    });
-
-    console.log("Маска создана:", phoneMask);
-  } else {
-    console.error("Поле телефона НЕ найдено!");
-  }
-
-  // --- Открытие формы ---
+  // Открытие формы
   document.getElementById("openBookingForm").addEventListener("click", function () {
     modal.style.display = "block";
   });
 
-  // --- Закрытие формы ---
+  // Закрытие формы
   closeBtn.addEventListener("click", function () {
     modal.style.display = "none";
   });
@@ -34,19 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // --- Инициализация календаря (inline) ---
-  flatpickr("#datepicker", {
-    minDate: "today",
-    dateFormat: "Y-m-d",
-    altInput: true,
-    altFormat: "F j, Y",
-    inline: true,
-    onChange: function(selectedDates, dateStr, instance) {
-      console.log("Дата выбрана:", dateStr);
-    }
-  });
-
-  // --- Маска для телефона ---
+  // Маска для телефона
   const phoneInputField = document.querySelector("[name=phone]");
   if (phoneInputField) {
     const phoneMask = new IMask(phoneInputField, {
@@ -55,8 +27,8 @@ document.addEventListener("DOMContentLoaded", function () {
   } else {
     console.error("Элемент с name='phone' не найден!");
   }
-  
-  // --- EmailJS отправка формы ---
+
+  // EmailJS и отправка формы
   emailjs.init("YOUR_USER_ID");
 
   document.getElementById("bookingForm").addEventListener("submit", function (e) {
@@ -66,8 +38,6 @@ document.addEventListener("DOMContentLoaded", function () {
     emailjs.sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", form)
       .then(() => {
         form.reset();
-        phoneMask.unmask(); // Сброс маски
-        phoneMask.masked.reformat(); // Перезапуск маски
         document.getElementById("successMessage").style.display = "block";
         setTimeout(() => {
           modal.style.display = "none";
