@@ -2,33 +2,43 @@ document.addEventListener("DOMContentLoaded", function () {
   const modal = document.getElementById("bookingModal");
   const closeBtn = document.querySelector(".close");
 
-  // Открытие формы
+  // --- Открытие формы ---
   document.getElementById("openBookingForm").addEventListener("click", function () {
     modal.style.display = "block";
   });
 
-  // Закрытие по крестику
+  // --- Закрытие формы ---
   closeBtn.addEventListener("click", function () {
     modal.style.display = "none";
   });
 
-  // Закрытие по клику вне окна
   window.addEventListener("click", function (e) {
     if (e.target === modal) {
       modal.style.display = "none";
     }
   });
 
-  // Инициализация календаря
+  // --- Инициализация календаря (inline) ---
   flatpickr("#datepicker", {
     minDate: "today",
-    dateFormat: "Y-m-d"
+    dateFormat: "Y-m-d",
+    altInput: true,
+    altFormat: "F j, Y",
+    inline: true,
+    onChange: function(selectedDates, dateStr, instance) {
+      console.log("Дата выбрана:", dateStr);
+    }
   });
 
-  // EmailJS
+  // --- Маска для телефона ---
+  const phoneInputField = document.querySelector("[name=phone]");
+  const phoneMask = new IMask(phoneInputField, {
+    mask: "+{7} (000) 000-00-00"
+  });
+
+  // --- EmailJS отправка формы ---
   emailjs.init("YOUR_USER_ID");
 
-  // Обработка отправки формы
   document.getElementById("bookingForm").addEventListener("submit", function (e) {
     e.preventDefault();
     const form = this;
@@ -36,6 +46,8 @@ document.addEventListener("DOMContentLoaded", function () {
     emailjs.sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", form)
       .then(() => {
         form.reset();
+        phoneMask.unmask(); // Сброс маски
+        phoneMask.masked.reformat(); // Перезапуск маски
         document.getElementById("successMessage").style.display = "block";
         setTimeout(() => {
           modal.style.display = "none";
